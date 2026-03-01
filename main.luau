@@ -45,7 +45,7 @@ return function(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, colour: Co
         end;
     end;
 
-    local draw = Drawlib.new(300, function() return; end);
+    local draw = Drawlib.new(sFOV, tFunc, colour);
     local on = true;
 
     local p = Instance.new("ScreenGui", hui);
