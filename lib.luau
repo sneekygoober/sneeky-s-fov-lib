@@ -145,9 +145,13 @@ end;
 function DrawLib:terminate()
     self.on = nil;
     if self.connection then self.connection:Disconnect(); self.connection = nil; end;
-    if self.p then self.p:Destroy(); self.p = nil; end;
-    if self.fov then self.fov:Destroy(); self.fov = nil; end;
-    if self.line then self.line:Destroy(); self.line = nil; end;
+    if not (Draw and cleardrawcache) then
+        if self.p then self.p:Destroy(); self.p = nil; end;
+        if self.fov then self.fov:Destroy(); self.fov = nil; end;
+        if self.line then self.line:Destroy(); self.line = nil; end;
+    else
+        cleardrawcache();
+    end;
 end;
 
 return DrawLib;
