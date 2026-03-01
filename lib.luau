@@ -16,7 +16,7 @@ end;
 local DrawLib = {};
 DrawLib.__index = DrawLib;
 
-function DrawLib.new(sFOV: number, tFunc: (origin: Vector3?) -> (BasePart?), colour: Color3?)
+function DrawLib.new(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, colour: Color3?)
     local self = setmetatable({}, DrawLib);
     self.size = sFOV;
     self.func = tFunc;
