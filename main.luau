@@ -37,24 +37,20 @@ local Drawlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/sneek
 
 return function(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, colour: Color3?)
     if getgenv().a03fjjg and hui:FindFirstChild(getgenv().a03fjjg["unique_id"]) then
-        if getgenv().a03fjjg["id"] == tostring(game.GameId) .. "_" .. game.JobId then
-            getgenv().a03fjjg["draw_instance"]:terminate();
-            hui[getgenv().a03fjjg["unique_id"]]:Destroy();
-        else
-            getgenv().a03fjjg = nil;
-        end;
+        getgenv().a03fjjg["draw_instance"]:terminate();
+        hui[getgenv().a03fjjg["unique_id"]]:Destroy();
     end;
 
     local draw = Drawlib.new(sFOV, tFunc, colour);
     local on = true;
 
     local p = Instance.new("ScreenGui", hui);
+    local uid = code(p:GetDebugId());
+    p.Name = uid;
     getgenv().a03fjjg = {
         ["draw_instance"] = draw,
-        ["unique_id"] = code(p:GetDebugId()),
-        ["id"] = tostring(game.GameId) .. "_" .. game.JobId;
+        ["unique_id"] = uid;
     };
-    p.Name = getgenv().a03fjjg["unique_id"];
 
     local menu = Instance.new("CanvasGroup", p)
     menu.Name = code(menu:GetDebugId());
