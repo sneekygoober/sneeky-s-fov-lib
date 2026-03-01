@@ -86,6 +86,15 @@ return function(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, colour: Co
     top.Size = UDim2.new(1, 0, 0.5, 0);
     top.BackgroundTransparency = 1;
 
+    local drag = Instance.new("TextLabel", top);
+    drag.Name = code(drag:GetDebugId());
+    drag.AnchorPoint = Vector2.new(0.5, 0.5);
+    drag.Position = UDim2.new(0, 0.5, 0, 0.5);
+    drag.Size = UDim2.new(0, 0.3, 0, 0.3);
+    drag.BackgroundTransparency = 1;
+    drag.TextScaled = true;
+    drag.Text = "HOLD TO DRAG";
+
     local logo = Instance.new("ImageLabel", top)
     logo.Name = code(logo:GetDebugId());
     logo.Size = UDim2.new(0, 64, 0, 64);
