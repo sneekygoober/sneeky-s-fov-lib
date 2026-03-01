@@ -1,0 +1,153 @@
+local cloneref = cloneref or function(i: Instance) return i; end;
+
+local RS: RunService = cloneref(game:GetService("RunService"));
+local UIS: UserInputService = cloneref(game:GetService("UserInputService"));
+local _ = cloneref(game:GetService("CoreGui"));
+local hui = _:FindFirstChild("RobloxGui") or _;
+if gethui then local s, r = pcall(gethui); if s then hui = cloneref(r); end; end;
+
+local code = function(n: string): string
+    if crypt and crypt.base64encode then
+        return crypt.base64encode(n);
+    end;
+    return n;
+end;
+
+local DrawLib = {};
+DrawLib.__index = DrawLib;
+
+function DrawLib.new(sFOV: number, tFunc: (origin: Vector3?) -> (BasePart?), colour: Color3?)
+    local self = setmetatable({}, DrawLib);
+    self.size = sFOV;
+    self.func = tFunc;
+    self.on = false;
+    self.p = nil;
+
+    if not Drawing then
+        self.p = Instance.new("ScreenGui", hui);
+        self.p.Name = code(self.p:GetDebugId());
+    end;
+
+    self.fov = Drawing and select(2, pcall(Drawing.new, "Circle")) or "";
+    if not self.fov or typeof(self.fov) ~= "string" then
+        self.fov.Color = colour or Color3.new(1, 0, 0);
+        self.fov.Radius = self.size;
+        self.fov.Thickness = 1;
+        self.fov.Transparency = 1;
+        self.fov.Filled = false;
+        self.fov.NumSides = 256;
+        self.fov.Visible = self.on;
+    else
+        self.fov = Instance.new("Frame", self.p);
+        self.Name = code(self.p:GetDebugId());
+        self.fov.AnchorPoint = Vector2.new(0.5, 0.5);
+        self.fov.Size = UDim2.new(0, self.size/2, 0, self.size/2);
+        self.fov.Position = UDim2.new(0, 0);
+        self.Transparency = 1;
+        self.fov.Visible = self.on;
+
+        local _ = Instance.new("UICorner", self.fov);
+        _.Name = code(_:GetDebugId());
+        _.CornerRadius = UDim.new(1, 0);
+
+        local __ = Instance.new("UIStroke", self.fov);
+        __.Name = code(__:GetDebugId());
+        __.Color = colour or Color3.new(1, 0, 0);
+        __.Thickness = 1;
+        __.LineJoinMode = Enum.LineJoinMode.Round;
+        __.Transparency = 0;
+    end;
+
+    self.line = Drawing and select(2, pcall(Drawing.new, "Line")) or "";
+    if not self.line or typeof(self.line) ~= "string" then
+        self.line.Thickness = 2;
+        self.line.Color = colour or Color3.new(1, 0, 0);
+        self.line.Transparency = 0.5;
+        self.line.Visible = self.on;
+    else
+        self.fov = Instance.new("Frame", self.p);
+        self.fov.Name = code(self.fov:GetDebugId());
+        self.fov.AnchorPoint = Vector2.new(0.5, 0.5);
+        self.fov.Size = UDim2.new(0, 0);
+        self.fov.Position = UDim2.new(0, 0);
+        self.Transparency = 0.5;
+        self.fov.Visible = self.on;
+
+        local _ = Instance.new("UIStroke", self.fov);
+        _.Name = code(_:GetDebugId());
+        _.Color = colour or Color3.new(1, 0, 0);
+        _.Thickness = 1;
+        _.LineJoinMode = Enum.LineJoinMode.Round;
+        _.Transparency = 0.5;
+    end;
+
+    self.connection = RS.RenderStepped:Connect(function()
+        if self.on then
+            local pos = UIS:GetMouseLocation();
+            local cam = workspace.CurrentCamera;
+
+            if self.fov then
+                self.fov.Position = pos;
+                if self.p then
+                    self.Size = UDim2.new(0, self.size/2, 0, self.size/2);
+                else
+                    self.fov.Radius = self.size;
+                end;
+                self.fov.Visible = true;
+            end;
+
+            if self.line then
+                local c = self.func(cam.CFrame.Position);
+                if c then
+                    local p, onScreen = cam:WorldToViewportPoint(c.Position);
+                    if onScreen then
+                        if self.p then
+                            p = Vector2.new(p.X, p.Y);
+
+                            local npos = (pos + p) / 2;
+                            local l = (pos - p).Magnitude;
+                            local a = math.atan2(p.Y - pos.Y, p.X - pos.X);
+
+                            self.line.Position = UDim2.fromOffset(npos.X, npos.Y);
+                            self.line.Size = UDim2.fromOffset(l, 0);
+                            self.line.Rotation = math.deg(a);
+                        else
+                            self.line.From = pos;
+                            self.line.To = Vector2.new(p.X, p.Y);
+                        end;
+                        self.line.Visible = true;
+                        return;
+                    end;
+                    return;
+                end;
+                self.line.Visible = false;
+            end;
+        else
+            self.fov.Visible = false;
+            self.line.Visible = false;
+        end;
+    end);
+    return self;
+end;
+
+function DrawLib:set(sFOV: number)
+    self.size = sFOV;
+end;
+
+function DrawLib:start()
+    self.on = true;
+end;
+
+function DrawLib:stop()
+    self.on = false;
+end;
+
+function DrawLib:terminate()
+    self.on = nil;
+    if self.connection then self.connection:Disconnect(); self.connection = nil; end;
+    if self.p then self.p:Destroy(); self.p = nil; end;
+    if self.fov then self.fov:Destroy(); self.fov = nil; end;
+    if self.line then self.line:Destroy(); self.line = nil; end;
+end;
+
+return DrawLib;
