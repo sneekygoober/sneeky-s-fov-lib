@@ -36,11 +36,20 @@ local SG = loadstring(game:HttpGet("https://raw.githubusercontent.com/sneekygoob
 local Drawlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/sneekygoober/sneeky-s-fov-lib/refs/heads/main/lib.luau"))();
 
 return function(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, colour: Color3?)
-    local draw = Drawlib.new(sFOV, tFunc, colour);
+    if getgenv().a03fjjg and hui:FindFirstChild(getgenv().a03fjjg["unique_id"]) then
+        getgenv().a03fjjg["draw_instance"]:terminate();
+        hui[getgenv().a03fjjg["unique_id"]]:Destroy();
+    end;
+
+    local draw = Drawlib.new(300, function() return; end);
     local on = true;
 
     local p = Instance.new("ScreenGui", hui);
-    p.Name = code(p:GetDebugId());
+    getgenv().a03fjjg = {
+        ["draw_instance"] = draw,
+        ["unique_id"] = code(p:GetDebugId())
+    };
+    p.Name = getgenv().a03fjjg["unique_id"];
 
     local menu = Instance.new("CanvasGroup", p)
     menu.Name = code(menu:GetDebugId());
