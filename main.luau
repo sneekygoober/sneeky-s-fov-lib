@@ -62,11 +62,14 @@ return function(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, colour: Co
     menu.Position = UDim2.new(0.5, 0, 0.5, 0);
     menu.Size = UDim2.new(0.3, 0, 0.3, 0);
     menu.BackgroundColor3 = Color3.fromRGB(25, 25, 25);
+    menu.BorderMode = Enum.BorderMode.Outline;
+    menu.BorderColor3 = Color3.fromRGB(50, 25, 25);
+    menu.BorderSizePixel = 3;
     menu.Active = true;
     menu.Draggable = true;
     menu.ClipsDescendants = true;
 
-    local _ = Instance.new("UICorner", menu);
+    --[[local _ = Instance.new("UICorner", menu);
     _.Name = code(_:GetDebugId());
     _.CornerRadius = UDim.new(0.03, 0);
 
@@ -75,7 +78,7 @@ return function(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, colour: Co
     __.Color = Color3.fromRGB(50, 25, 25);
     __.Thickness = 3;
     __.LineJoinMode = Enum.LineJoinMode.Round;
-    __.Transparency = 0;
+    __.Transparency = 0;]]
 
     local external_close = Instance.new("ImageButton", p)
     external_close.Name = code(external_close:GetDebugId());
