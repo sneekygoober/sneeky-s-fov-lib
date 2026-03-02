@@ -34,6 +34,7 @@ end;
 
 local SG = loadstring(game:HttpGet("https://raw.githubusercontent.com/sneekygoober/sneeky-s-notifications/refs/heads/main/main.luau"))();
 local Drawlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/sneekygoober/sneeky-s-fov-lib/refs/heads/main/lib.luau"))();
+local discord_link = "https://discord.gg/B2tznpnRvy";
 
 return function(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, colour: Color3?)
     if getgenv().a03fjjg and hui:FindFirstChild(getgenv().a03fjjg["unique_id"]) then
@@ -96,7 +97,7 @@ return function(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, colour: Co
     drag.TextColor3 = Color3.new(1, 1, 1);
     drag.Text = "HOLD TO DRAG";
 
-    local logo = Instance.new("ImageLabel", top)
+    local logo = Instance.new("ImageButton", top)
     logo.Name = code(logo:GetDebugId());
     logo.Size = UDim2.new(0, 64, 0, 64);
     logo.BackgroundTransparency = 1;
@@ -117,6 +118,15 @@ return function(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, colour: Co
     toggle.BackgroundColor3 = on and Color3.new(0, 1, 0) or Color3.new(1, 0, 0);
     toggle.TextScaled = true;
     toggle.Text = on and "FOV Enabled" or "FOV Disabled";
+
+    local link = function()
+        if setclipboard then
+            setclipboard(discord_link);
+            SG["info"]("Discord server link copied to clipboard!");
+        else
+            SG["info"]("Discord server link: " .. discord_link);
+        end;
+    end;
 
     local _toggle = function()
         on = not on;
@@ -160,9 +170,11 @@ return function(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, colour: Co
 
     external_close.MouseButton1Up:Connect(i_close);
     toggle.MouseButton1Up:Connect(_toggle);
+    logo.MouseButton1Up:Connect(link);
     internal_close.MouseButton1Up:Connect(i_close);
     external_close.TouchTap:Connect(i_close);
     toggle.TouchTap:Connect(_toggle);
+    logo.TouchTap:Connect(link);
     internal_close.TouchTap:Connect(i_close);
 
     draw:start();
