@@ -23,13 +23,49 @@ function DrawLib.new(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, colou
     self.on = false;
     self.p = nil;
 
-    if not Drawing then
+    if not (Drawing and cleardrawcache) then
         self.p = Instance.new("ScreenGui", hui);
         self.p.Name = code(self.p:GetDebugId());
-    end;
 
-    self.fov = Drawing and select(2, pcall(Drawing.new, "Circle")) or "";
-    if not self.fov or typeof(self.fov) ~= "string" then
+        do
+            self.fov = Instance.new("Frame", self.p);
+            self.fov.Name = code(self.p:GetDebugId());
+            self.fov.AnchorPoint = Vector2.new(0.5, 0.5);
+            self.fov.Size = UDim2.new(0, self.size/2, 0, self.size/2);
+            self.fov.Position = UDim2.new(0, 0);
+            self.fov.Transparency = 1;
+            self.fov.Visible = self.on;
+
+            local _ = Instance.new("UICorner", self.fov);
+            _.Name = code(_:GetDebugId());
+            _.CornerRadius = UDim.new(1, 0);
+
+            local __ = Instance.new("UIStroke", self.fov);
+            __.Name = code(__:GetDebugId());
+            __.Color = colour or Color3.new(1, 0, 0);
+            __.Thickness = 1;
+            __.LineJoinMode = Enum.LineJoinMode.Round;
+            __.Transparency = 0;
+        end;
+
+        do
+            self.line = Instance.new("Frame", self.p);
+            self.line.Name = code(self.line:GetDebugId());
+            self.line.AnchorPoint = Vector2.new(0.5, 0.5);
+            self.line.Size = UDim2.new(0, 0);
+            self.line.Position = UDim2.new(0, 0);
+            self.line.Transparency = 0.5;
+            self.line.Visible = self.on;
+
+            local _ = Instance.new("UIStroke", self.line);
+            _.Name = code(_:GetDebugId());
+            _.Color = colour or Color3.new(1, 0, 0);
+            _.Thickness = 1;
+            _.LineJoinMode = Enum.LineJoinMode.Round;
+            _.Transparency = 0.5;
+        end;
+    else
+        self.fov = Drawing.new("Circle");
         self.fov.Color = colour or Color3.new(1, 0, 0);
         self.fov.Radius = self.size;
         self.fov.Thickness = 1;
@@ -37,48 +73,12 @@ function DrawLib.new(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, colou
         self.fov.Filled = false;
         self.fov.NumSides = 256;
         self.fov.Visible = self.on;
-    else
-        self.fov = Instance.new("Frame", self.p);
-        self.Name = code(self.p:GetDebugId());
-        self.fov.AnchorPoint = Vector2.new(0.5, 0.5);
-        self.fov.Size = UDim2.new(0, self.size/2, 0, self.size/2);
-        self.fov.Position = UDim2.new(0, 0);
-        self.Transparency = 1;
-        self.fov.Visible = self.on;
 
-        local _ = Instance.new("UICorner", self.fov);
-        _.Name = code(_:GetDebugId());
-        _.CornerRadius = UDim.new(1, 0);
-
-        local __ = Instance.new("UIStroke", self.fov);
-        __.Name = code(__:GetDebugId());
-        __.Color = colour or Color3.new(1, 0, 0);
-        __.Thickness = 1;
-        __.LineJoinMode = Enum.LineJoinMode.Round;
-        __.Transparency = 0;
-    end;
-
-    self.line = Drawing and select(2, pcall(Drawing.new, "Line")) or "";
-    if not self.line or typeof(self.line) ~= "string" then
+        self.line = Drawing.new("Line");
         self.line.Thickness = 2;
         self.line.Color = colour or Color3.new(1, 0, 0);
         self.line.Transparency = 0.5;
         self.line.Visible = self.on;
-    else
-        self.fov = Instance.new("Frame", self.p);
-        self.fov.Name = code(self.fov:GetDebugId());
-        self.fov.AnchorPoint = Vector2.new(0.5, 0.5);
-        self.fov.Size = UDim2.new(0, 0);
-        self.fov.Position = UDim2.new(0, 0);
-        self.Transparency = 0.5;
-        self.fov.Visible = self.on;
-
-        local _ = Instance.new("UIStroke", self.fov);
-        _.Name = code(_:GetDebugId());
-        _.Color = colour or Color3.new(1, 0, 0);
-        _.Thickness = 1;
-        _.LineJoinMode = Enum.LineJoinMode.Round;
-        _.Transparency = 0.5;
     end;
 
     self.connection = RS.RenderStepped:Connect(function()
@@ -127,6 +127,7 @@ function DrawLib.new(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, colou
             self.line.Visible = false;
         end;
     end);
+    
     return self;
 end;
 
@@ -145,7 +146,7 @@ end;
 function DrawLib:terminate()
     self.on = nil;
     if self.connection then self.connection:Disconnect(); self.connection = nil; end;
-    if not (Draw and cleardrawcache) then
+    if not (Drawing and cleardrawcache) then
         if self.p then self.p:Destroy(); self.p = nil; end;
         if self.fov then self.fov:Destroy(); self.fov = nil; end;
         if self.line then self.line:Destroy(); self.line = nil; end;
