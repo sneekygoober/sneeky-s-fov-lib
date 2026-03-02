@@ -34,12 +34,15 @@ end;
 
 local SG = loadstring(game:HttpGet("https://raw.githubusercontent.com/sneekygoober/sneeky-s-notifications/refs/heads/main/main.luau"))();
 local Drawlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/sneekygoober/sneeky-s-fov-lib/refs/heads/main/lib.luau"))();
-local discord_link = "https://discord.gg/B2tznpnRvy";
+local discord_link = "";
+local key = code("a03fjjg");
 
 return function(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, colour: Color3?)
-    if getgenv().a03fjjg and hui:FindFirstChild(getgenv().a03fjjg["unique_id"]) then
-        getgenv().a03fjjg["draw_instance"]:terminate();
-        hui[getgenv().a03fjjg["unique_id"]]:Destroy();
+    if getgenv()[key] and hui:FindFirstChild(getgenv()[key]["unique_id"]) then
+        getgenv()[key]["draw_instance"]:terminate();
+        hui[getgenv()[key]["unique_id"]]:Destroy();
+        table.clear(getgenv()[key]);
+        getgenv()[key] = nil;
     end;
 
     local draw = Drawlib.new(sFOV, tFunc, colour);
@@ -48,7 +51,7 @@ return function(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, colour: Co
     local p = Instance.new("ScreenGui", hui);
     local uid = code(p:GetDebugId());
     p.Name = uid;
-    getgenv().a03fjjg = {
+    getgenv()[key] = {
         ["draw_instance"] = draw,
         ["unique_id"] = uid;
     };
@@ -61,6 +64,7 @@ return function(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, colour: Co
     menu.BackgroundColor3 = Color3.fromRGB(25, 25, 25);
     menu.Active = true;
     menu.Draggable = true;
+    menu.ClipsDescendants = true;
 
     local _ = Instance.new("UICorner", menu);
     _.Name = code(_:GetDebugId());
