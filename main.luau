@@ -34,7 +34,7 @@ end;
 
 local SG = loadstring(game:HttpGet("https://raw.githubusercontent.com/sneekygoober/sneeky-s-notifications/refs/heads/main/main.luau"))();
 local Drawlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/sneekygoober/sneeky-s-fov-lib/refs/heads/main/lib.luau"))();
-local discord_link = "";
+local discord_link = "https://discord.gg/B2tznpnRvy";
 local key = code("a03fjjg");
 
 return function(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, colour: Color3?)
