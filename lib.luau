@@ -88,7 +88,7 @@ function DrawLib.new(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, colou
 
             if self.fov then
                 if self.p then
-                    self.fov.Position = UDim2.new(0, pos.X, 0, pos.Y*2);
+                    self.fov.Position = UDim2.new(0, pos.X, 0, pos.Y);
                     self.Size = UDim2.new(0, self.size*2, 0, self.size*2);
                 else
                     self.fov.Position = pos;
