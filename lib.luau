@@ -87,10 +87,11 @@ function DrawLib.new(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, colou
             local cam = workspace.CurrentCamera;
 
             if self.fov then
-                self.fov.Position = pos;
                 if self.p then
+                    self.fov.Position = UDim2.new(pos.X, pos.Y);
                     self.Size = UDim2.new(0, self.size/2, 0, self.size/2);
                 else
+                    self.fov.Position = pos;
                     self.fov.Radius = self.size;
                 end;
                 self.fov.Visible = true;
@@ -101,9 +102,8 @@ function DrawLib.new(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, colou
                 if c then
                     local p, onScreen = cam:WorldToViewportPoint(c.Position);
                     if onScreen then
+                        p = Vector2.new(p.X, p.Y);
                         if self.p then
-                            p = Vector2.new(p.X, p.Y);
-
                             local npos = (pos + p) / 2;
                             local l = (pos - p).Magnitude;
                             local a = math.atan2(p.Y - pos.Y, p.X - pos.X);
@@ -113,7 +113,7 @@ function DrawLib.new(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, colou
                             self.line.Rotation = math.deg(a);
                         else
                             self.line.From = pos;
-                            self.line.To = Vector2.new(p.X, p.Y);
+                            self.line.To = p;
                         end;
                         self.line.Visible = true;
                         return;
