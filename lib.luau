@@ -100,7 +100,7 @@ function DrawLib.new(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, colou
             if self.line then
                 local c = self.func(cam.CFrame.Position);
                 if c then
-                    local p, onScreen = cam:WorldToViewportPoint(c.Position);
+                    local p, onScreen = cam:WorldToViewportPoint(typeof(c) == "Vector3" and c or c.Position);
                     if onScreen then
                         p = Vector2.new(p.X, p.Y);
                         if self.p then
