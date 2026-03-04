@@ -30,7 +30,7 @@ function DrawLib.new(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, colou
         do
             self.fov = Instance.new("Frame", self.p);
             self.fov.Name = code(self.p:GetDebugId());
-            self.fov.AnchorPoint = Vector2.new(0.5, 0);
+            self.fov.AnchorPoint = Vector2.new(0.5, 1);
             self.fov.Size = UDim2.new(0, self.size, 0, self.size);
             self.fov.Position = UDim2.new(0, 0);
             self.fov.Transparency = 1;
@@ -51,7 +51,7 @@ function DrawLib.new(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, colou
         do
             self.line = Instance.new("Frame", self.p);
             self.line.Name = code(self.line:GetDebugId());
-            self.line.AnchorPoint = Vector2.new(0.5, 0);
+            self.line.AnchorPoint = Vector2.new(0.5, 1);
             self.line.Size = UDim2.new(0, 0);
             self.line.Position = UDim2.new(0, 0);
             self.line.Transparency = 0.5;
