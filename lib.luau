@@ -1,7 +1,6 @@
 local cloneref = cloneref or function(i: Instance) return i; end;
 
 local RS: RunService = cloneref(game:GetService("RunService"));
-local Players: Players = cloneref(game:GetService("Players"));
 local UIS: UserInputService = cloneref(game:GetService("UserInputService"));
 local _ = cloneref(game:GetService("CoreGui"));
 local hui = _:FindFirstChild("RobloxGui") or _;
@@ -12,11 +11,6 @@ local code = function(n: string): string
         return crypt.base64encode(n);
     end;
     return n;
-end;
-
-local mouse: Mouse?;
-if not UIS.TouchEnabled and UIS.MouseEnabled and UIS.KeyboardEnabled then
-    mouse = Players.LocalPlayer:GetMouse();
 end;
 
 local DrawLib = {};
@@ -89,7 +83,7 @@ function DrawLib.new(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, colou
 
     self.connection = RS.RenderStepped:Connect(function()
         if self.on then
-            local pos = Vector2.new(mouse.X, mouse.Y);
+            local pos = UIS:GetMouseLocation();
             local cam = workspace.CurrentCamera;
 
             if self.fov then
