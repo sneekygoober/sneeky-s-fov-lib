@@ -1,9 +1,12 @@
 local cloneref = cloneref or function(i: Instance) return i; end;
 
 local GS: GuiService = cloneref(game:GetService("GuiService"));
+local Players: Players = cloneref(game:GetService("Players"));
 local _ = cloneref(game:GetService("CoreGui"));
 local hui = _:FindFirstChild("RobloxGui") or _;
 if gethui then local s, r = pcall(gethui); if s then hui = cloneref(r); end; end;
+
+local plr = Players.LocalPlayer;
 
 local code = function(n: string): string
     if crypt and crypt.base64encode then
@@ -34,26 +37,33 @@ end;
 
 local SG = loadstring(game:HttpGet("https://raw.githubusercontent.com/sneekygoober/sneeky-s-notifications/refs/heads/main/main.luau"))();
 local Drawlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/sneekygoober/sneeky-s-fov-lib/refs/heads/main/lib.luau"))();
-local discord_link = "https://discord.gg/B2tznpnRvy";
-local key = code("a03fjjg");
+local info = loadstring(game:HttpGet("https://raw.githubusercontent.com/sneekygoober/sneeky-s-fov-lib/refs/heads/main/info.luau"))();
+local discord_link = info.discord_link;
+local key = code(info.ggKey);
 
 return function(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, colour: Color3?)
-    if getgenv()[key] and hui:FindFirstChild(getgenv()[key]["unique_id"]) then
-        getgenv()[key]["draw_instance"]:terminate();
-        hui[getgenv()[key]["unique_id"]]:Destroy();
-        table.clear(getgenv()[key]);
-        getgenv()[key] = nil;
+    if getgenv()[key] then
+        if getgenv()[key]["draw_instance"] and getgenv()[key]["p_instance"] and getgenv()[key]["connections"] then
+            getgenv()[key]["draw_instance"]:terminate();
+            for _, v in next, getgenv()[key]["connections"] do v:Disconnect(); end;
+            table.clear(getgenv()[key]["connections"]);
+            getgenv()[key]["p_instance"]:Destroy();
+            table.clear(getgenv()[key]);
+            getgenv()[key] = nil;
+        else
+            plr:Kick("Don't tamper with that getgenv key. If you believe this kick a mistake please join the Discord server and report it!\nDiscord Server Link: " .. discord_link);
+        end;
     end;
 
     local draw = Drawlib.new(sFOV, tFunc, colour);
     local on = true;
 
     local p = Instance.new("ScreenGui", hui);
-    local uid = code(p:GetDebugId());
-    p.Name = uid;
+    p.Name = code(p:GetDebugId());
     getgenv()[key] = {
         ["draw_instance"] = draw,
-        ["unique_id"] = uid;
+        ["p_instance"] = p,
+        ["connections"] = {}
     };
 
     local menu = Instance.new("CanvasGroup", p)
@@ -172,17 +182,17 @@ return function(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, colour: Co
         end;
     end;
 
-    GS.MenuOpened:Connect(e_close);
-    GS.MenuClosed:Connect(e_close);
+    getgenv()[key].connections[#getgenv()[key].connections+1] = GS.MenuOpened:Connect(e_close);
+    getgenv()[key].connections[#getgenv()[key].connections+1] = GS.MenuClosed:Connect(e_close);
 
-    external_close.MouseButton1Up:Connect(i_close);
-    toggle.MouseButton1Up:Connect(_toggle);
-    logo.MouseButton1Up:Connect(link);
-    internal_close.MouseButton1Up:Connect(i_close);
-    external_close.TouchTap:Connect(i_close);
-    toggle.TouchTap:Connect(_toggle);
-    logo.TouchTap:Connect(link);
-    internal_close.TouchTap:Connect(i_close);
+    getgenv()[key].connections[#getgenv()[key].connections+1] = external_close.MouseButton1Up:Connect(i_close);
+    getgenv()[key].connections[#getgenv()[key].connections+1] = toggle.MouseButton1Up:Connect(_toggle);
+    getgenv()[key].connections[#getgenv()[key].connections+1] = logo.MouseButton1Up:Connect(link);
+    getgenv()[key].connections[#getgenv()[key].connections+1] = internal_close.MouseButton1Up:Connect(i_close);
+    getgenv()[key].connections[#getgenv()[key].connections+1] = external_close.TouchTap:Connect(i_close);
+    getgenv()[key].connections[#getgenv()[key].connections+1] = toggle.TouchTap:Connect(_toggle);
+    getgenv()[key].connections[#getgenv()[key].connections+1] = logo.TouchTap:Connect(link);
+    getgenv()[key].connections[#getgenv()[key].connections+1] = internal_close.TouchTap:Connect(i_close);
 
     draw:start();
 end;
