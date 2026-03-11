@@ -43,7 +43,7 @@ local key = code(info.ggKey);
 
 return function(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, colour: Color3?)
     if getgenv()[key] then
-        if getgenv()[key]["draw_instance"] and getgenv()[key]["p_instance"] and getgenv()[key]["connections"] then
+        if getgenv()[key]["draw_instance"] and getgenv()[key]["connections"] and getgenv()[key]["p_instance"] then
             getgenv()[key]["draw_instance"]:terminate();
             for _, v in next, getgenv()[key]["connections"] do v:Disconnect(); end;
             table.clear(getgenv()[key]["connections"]);
@@ -60,11 +60,6 @@ return function(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, colour: Co
 
     local p = Instance.new("ScreenGui", hui);
     p.Name = code(p:GetDebugId());
-    getgenv()[key] = {
-        ["draw_instance"] = draw,
-        ["p_instance"] = p,
-        ["connections"] = {}
-    };
 
     local menu = Instance.new("CanvasGroup", p)
     menu.Name = code(menu:GetDebugId());
@@ -182,17 +177,23 @@ return function(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, colour: Co
         end;
     end;
 
-    getgenv()[key].connections[#getgenv()[key].connections+1] = GS.MenuOpened:Connect(e_close);
-    getgenv()[key].connections[#getgenv()[key].connections+1] = GS.MenuClosed:Connect(e_close);
+    getgenv()[key] = {
+        ["draw_instance"] = draw,
+        ["connections"] = {
+            GS.MenuOpened:Connect(e_close),
+            GS.MenuClosed:Connect(e_close),
 
-    getgenv()[key].connections[#getgenv()[key].connections+1] = external_close.MouseButton1Up:Connect(i_close);
-    getgenv()[key].connections[#getgenv()[key].connections+1] = toggle.MouseButton1Up:Connect(_toggle);
-    getgenv()[key].connections[#getgenv()[key].connections+1] = logo.MouseButton1Up:Connect(link);
-    getgenv()[key].connections[#getgenv()[key].connections+1] = internal_close.MouseButton1Up:Connect(i_close);
-    getgenv()[key].connections[#getgenv()[key].connections+1] = external_close.TouchTap:Connect(i_close);
-    getgenv()[key].connections[#getgenv()[key].connections+1] = toggle.TouchTap:Connect(_toggle);
-    getgenv()[key].connections[#getgenv()[key].connections+1] = logo.TouchTap:Connect(link);
-    getgenv()[key].connections[#getgenv()[key].connections+1] = internal_close.TouchTap:Connect(i_close);
+            external_close.MouseButton1Up:Connect(i_close),
+            toggle.MouseButton1Up:Connect(_toggle),
+            logo.MouseButton1Up:Connect(link),
+            internal_close.MouseButton1Up:Connect(i_close),
+            external_close.TouchTap:Connect(i_close),
+            toggle.TouchTap:Connect(_toggle),
+            logo.TouchTap:Connect(link),
+            internal_close.TouchTap:Connect(i_close)
+        },
+        ["p_instance"] = p
+    };
 
     draw:start();
 end;
