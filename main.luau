@@ -41,7 +41,7 @@ local info = loadstring(game:HttpGet("https://raw.githubusercontent.com/sneekygo
 local discord_link = info.discord_link;
 local key = code(info.ggKey);
 
-return function(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, colour: Color3?)
+return function(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, mCenter: boolean?, colour: Color3?)
     if getgenv()[key] then
         if getgenv()[key]["draw_instance"] and getgenv()[key]["connections"] and getgenv()[key]["p_instance"] then
             getgenv()[key]["draw_instance"]:terminate();
@@ -55,7 +55,7 @@ return function(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, colour: Co
         end;
     end;
 
-    local draw = Drawlib.new(sFOV, tFunc, colour);
+    local draw = Drawlib.new(sFOV, tFunc, mCenter, colour);
     local on = true;
 
     local p = Instance.new("ScreenGui", hui);
