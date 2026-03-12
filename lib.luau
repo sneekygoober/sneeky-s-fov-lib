@@ -21,7 +21,7 @@ function DrawLib.new(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, mCent
     self.size = sFOV;
     self.func = tFunc;
     self.on = false;
-    self.center = mCenter and UIS:GetDeviceType() == Enum.DeviceType.Phone;
+    self.center = mCenter and (UIS.TouchEnabled and not UIS.KeyboardEnabled and not UIS.MouseEnabled);
     self.p = nil;
 
     if not (Drawing and cleardrawcache) then
