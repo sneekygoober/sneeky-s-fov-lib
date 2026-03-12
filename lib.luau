@@ -6,6 +6,8 @@ local _ = cloneref(game:GetService("CoreGui"));
 local hui = _:FindFirstChild("RobloxGui") or _;
 if gethui then local s, r = pcall(gethui); if s then hui = cloneref(r); end; end;
 
+local cam = workspace.CurrentCamera;
+
 local code = function(n: string): string
     if crypt and crypt.base64encode then
         return crypt.base64encode(n);
@@ -84,7 +86,7 @@ function DrawLib.new(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, mCent
 
     self.connection = RS.RenderStepped:Connect(function()
         if self.on then
-            local pos = self.center and Vector2.new(0.5, 0.5) or UIS:GetMouseLocation();
+            local pos = self.center and Vector2.new(cam.ViewportSize.X/2, cam.ViewportSize.Y/2) or UIS:GetMouseLocation();
             local cam = workspace.CurrentCamera;
 
             if self.fov then
