@@ -16,11 +16,12 @@ end;
 local DrawLib = {};
 DrawLib.__index = DrawLib;
 
-function DrawLib.new(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, colour: Color3?)
+function DrawLib.new(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, mCenter: boolean?, colour: Color3?)
     local self = setmetatable({}, DrawLib);
     self.size = sFOV;
     self.func = tFunc;
     self.on = false;
+    self.center = mCenter and UIS:GetDeviceType() == Enum.DeviceType.Phone;
     self.p = nil;
 
     if not (Drawing and cleardrawcache) then
@@ -83,7 +84,7 @@ function DrawLib.new(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, colou
 
     self.connection = RS.RenderStepped:Connect(function()
         if self.on then
-            local pos = UIS:GetMouseLocation();
+            local pos = self.center and Vector2.new(0.5, 0.5) or UIS:GetMouseLocation();
             local cam = workspace.CurrentCamera;
 
             if self.fov then
