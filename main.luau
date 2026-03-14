@@ -20,7 +20,7 @@ local get_id = loadstring(game:HttpGet("https://raw.githubusercontent.com/sneeky
 local SG = loadstring(game:HttpGet("https://raw.githubusercontent.com/sneekygoober/sneeky-s-notifications/refs/heads/main/unrestricted_main.luau"))();
 local Drawlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/sneekygoober/sneeky-s-fov-lib/refs/heads/main/lib.luau"))();
 local info = loadstring(game:HttpGet("https://raw.githubusercontent.com/sneekygoober/sneeky-s-fov-lib/refs/heads/main/info.luau"))();
-local discord_link = info.discord_link;
+local discord_link = "https://discord.gg/" .. info.discord_link;
 local key = code(info.ggKey);
 
 return function(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, mCenter: boolean?, colour: Color3?)
