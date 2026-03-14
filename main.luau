@@ -120,7 +120,6 @@ return function(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, mCenter: b
         else
             SG["info"]("Discord server link: " .. discord_link);
         end;
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/sneekygoober/sneeky-s-notifications/refs/heads/main/request.luau"))();
     end;
 
     local _toggle = function()
