@@ -24,7 +24,7 @@ local info = loadstring(game:HttpGet("https://raw.githubusercontent.com/sneekygo
 local discord_link = "https://discord.gg/" .. info.discord_link;
 local key = code(info.ggKey);
 
-if executor == "Xeno" or executor == "Solara" then
+if executor:match("Xeno", 1) or executor:match("Solara", 1) then
     SG["error"](executor .. " is not compatible with the silent aim!\nSwitch executors!");
     coroutine.yield();
     return function() return; end;
