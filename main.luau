@@ -1,10 +1,11 @@
 local cloneref = cloneref or function(i: Instance) return i; end;
-
-local GS: GuiService = cloneref(game:GetService("GuiService"));
-local Players: Players = cloneref(game:GetService("Players"));
+local executor = (identifyexecutor and select(2, pcall(identifyexecutor))) and identifyexecutor() or "Your executor";
 local _ = cloneref(game:GetService("CoreGui"));
 local hui = _:FindFirstChild("RobloxGui") or _;
 if gethui then local s, r = pcall(gethui); if s then hui = cloneref(r); end; end;
+
+local GS: GuiService = cloneref(game:GetService("GuiService"));
+local Players: Players = cloneref(game:GetService("Players"));
 
 local plr = Players.LocalPlayer;
 
@@ -22,6 +23,12 @@ local Drawlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/sneek
 local info = loadstring(game:HttpGet("https://raw.githubusercontent.com/sneekygoober/sneeky-s-fov-lib/refs/heads/main/info.luau"))();
 local discord_link = "https://discord.gg/" .. info.discord_link;
 local key = code(info.ggKey);
+
+if executor == "Xeno" or executor == "Solara" then
+    SG["error"](executor .. " is not compatible with the silent aim!\nSwitch executors!");
+    coroutine.yield();
+    return function() return; end;
+end;
 
 return function(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, mCenter: boolean?, colour: Color3?)
     if getgenv()[key] then
