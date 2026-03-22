@@ -18,7 +18,7 @@ end;
 local DrawLib = {};
 DrawLib.__index = DrawLib;
 
-function DrawLib.new(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, mCenter: boolean?, colour: Color3?)
+function DrawLib.new(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, mCenter: boolean?)
     local self = setmetatable({}, DrawLib);
     self.size = sFOV;
     self.func = tFunc;
@@ -45,7 +45,7 @@ function DrawLib.new(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, mCent
 
             local __ = Instance.new("UIStroke", self.fov);
             __.Name = code(__:GetDebugId());
-            __.Color = colour or Color3.new(1, 0, 0);
+            __.Color = Color3.new(1, 0, 0);
             __.Thickness = 1;
             __.LineJoinMode = Enum.LineJoinMode.Round;
             __.Transparency = 0;
@@ -62,14 +62,14 @@ function DrawLib.new(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, mCent
 
             local _ = Instance.new("UIStroke", self.line);
             _.Name = code(_:GetDebugId());
-            _.Color = colour or Color3.new(1, 0, 0);
+            _.Color = Color3.new(1, 0, 0);
             _.Thickness = 1;
             _.LineJoinMode = Enum.LineJoinMode.Round;
             _.Transparency = 0.5;
         end;
     else
         self.fov = Drawing.new("Circle");
-        self.fov.Color = colour or Color3.new(1, 0, 0);
+        self.fov.Color = Color3.new(1, 0, 0);
         self.fov.Radius = self.size;
         self.fov.Thickness = 1;
         self.fov.Transparency = 1;
@@ -79,7 +79,7 @@ function DrawLib.new(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, mCent
 
         self.line = Drawing.new("Line");
         self.line.Thickness = 2;
-        self.line.Color = colour or Color3.new(1, 0, 0);
+        self.line.Color = Color3.new(1, 0, 0);
         self.line.Transparency = 0.5;
         self.line.Visible = self.on;
     end;
