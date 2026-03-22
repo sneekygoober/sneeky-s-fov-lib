@@ -84,6 +84,14 @@ function DrawLib.new(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, mCent
         self.line.Visible = self.on;
     end;
 
+    local cSet = function(isGreen: boolean)
+        if self.p then
+            self.fov:FindFirstChildOfClass("UIStroke").Color = isGreen and Color3.new(0, 1, 0) or Color3.new(1, 0, 0);
+        else
+            self.fov.Color = isGreen and Color3.new(0, 1, 0) or Color3.new(1, 0, 0);
+        end;
+    end;
+
     self.connection = RS.RenderStepped:Connect(function()
         if self.on then
             local pos = self.center and Vector2.new(cam.ViewportSize.X/2, cam.ViewportSize.Y/2) or UIS:GetMouseLocation();
@@ -119,15 +127,18 @@ function DrawLib.new(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, mCent
                             self.line.To = p;
                         end;
                         self.line.Visible = true;
+                        cSet(true);
                         return;
                     end;
                     return;
                 end;
                 self.line.Visible = false;
+                cSet(false);
             end;
         else
             self.fov.Visible = false;
             self.line.Visible = false;
+            cSet(false);
         end;
     end);
     
