@@ -31,6 +31,8 @@ if executor:match("Xeno", 1) or executor:match("Solara", 1) then
 end;
 
 return function(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, mCenter: boolean?)
+    SG["info"]("Loading UI...");
+
     if getgenv()[key] then
         if getgenv()[key]["draw_instance"] and getgenv()[key]["connections"] and getgenv()[key]["p_instance"] then
             getgenv()[key]["draw_instance"]:terminate();
