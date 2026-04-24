@@ -67,6 +67,8 @@ function DrawLib.new(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, mCent
             _.LineJoinMode = Enum.LineJoinMode.Round;
             _.Transparency = 0.5;
         end;
+    elseif DrawingImmediate then
+        self.signal = DrawingImmediate.GetPaint(1);
     else
         self.fov = Drawing.new("Circle");
         self.fov.Color = Color3.new(1, 0, 0);
@@ -87,12 +89,38 @@ function DrawLib.new(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, mCent
     local cSet = function(isGreen: boolean)
         if self.p then
             self.fov:FindFirstChildOfClass("UIStroke").Color = isGreen and Color3.new(0, 1, 0) or Color3.new(1, 0, 0);
+        elseif self.signal then
+            return isGreen and Color3.new(0, 1, 0) or Color3.new(1, 0, 0);
         else
             self.fov.Color = isGreen and Color3.new(0, 1, 0) or Color3.new(1, 0, 0);
         end;
     end;
 
-    self.connection = RS.RenderStepped:Connect(function()
+    self.connection = self.signal and (self.signal::RBXScriptSignal):Connect(function()
+        if self.on then
+            local pos = self.center and Vector2.new(cam.ViewportSize.X/2, cam.ViewportSize.Y/2) or UIS:GetMouseLocation();
+            local cam = workspace.CurrentCamera;
+            local set = false;
+
+            local c = self.func(cam.CFrame.Position);
+            if c then
+                local p, onScreen = cam:WorldToViewportPoint(--[[typeof(c) == "Vector3" and c or]] c.Position);
+                if onScreen then
+                    DrawingImmediate.Line(pos, p, Color3.new(1, 0, 0), 1, 2);
+                    set = true;
+                else
+                    set = false;
+                end;
+            else
+                set = false;
+            end;
+            DrawingImmediate.Circle(pos, 100, cSet(set), 1, 256, 1);
+        else
+            self.fov.Visible = false;
+            self.line.Visible = false;
+            cSet(false);
+        end;
+    end) or RS.RenderStepped:Connect(function()
         if self.on then
             local pos = self.center and Vector2.new(cam.ViewportSize.X/2, cam.ViewportSize.Y/2) or UIS:GetMouseLocation();
             local cam = workspace.CurrentCamera;
@@ -160,10 +188,13 @@ end;
 function DrawLib:terminate()
     self.on = nil;
     if self.connection then self.connection:Disconnect(); self.connection = nil; end;
-    if not (Drawing and cleardrawcache) then
-        if self.p then self.p:Destroy(); self.p = nil; end;
+    if self.p then
+        self.p:Destroy();
+        self.p = nil;
         if self.fov then self.fov:Destroy(); self.fov = nil; end;
         if self.line then self.line:Destroy(); self.line = nil; end;
+    elseif self.signal then
+        self.signal = nil;
     else
         cleardrawcache();
     end;
