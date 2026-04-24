@@ -106,6 +106,7 @@ function DrawLib.new(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, mCent
             if c then
                 local p, onScreen = cam:WorldToViewportPoint(--[[typeof(c) == "Vector3" and c or]] c.Position);
                 if onScreen then
+                    p = Vector2.new(p.X, p.Y);
                     DrawingImmediate.Line(pos, p, Color3.new(1, 0, 0), 1, 2);
                     set = true;
                 else
