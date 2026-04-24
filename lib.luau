@@ -24,7 +24,7 @@ function DrawLib.new(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, mCent
     self.func = tFunc;
     self.on = false;
     self.center = mCenter and (UIS.TouchEnabled and not UIS.KeyboardEnabled and not UIS.MouseEnabled);
-    self.p = nil;
+    --self.p = nil;
 
     if not (Drawing and cleardrawcache) then
         self.p = Instance.new("ScreenGui", hui);
