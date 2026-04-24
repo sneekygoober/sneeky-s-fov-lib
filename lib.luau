@@ -116,10 +116,6 @@ function DrawLib.new(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, mCent
                 set = false;
             end;
             DrawingImmediate.Circle(pos, 100, cSet(set), 1, 256, 1);
-        else
-            self.fov.Visible = false;
-            self.line.Visible = false;
-            cSet(false);
         end;
     end) or RS.RenderStepped:Connect(function()
         if self.on then
