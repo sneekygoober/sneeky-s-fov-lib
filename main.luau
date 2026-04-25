@@ -6,8 +6,10 @@ if gethui then local s, r = pcall(gethui); if s then hui = cloneref(r); end; end
 
 local GS: GuiService = cloneref(game:GetService("GuiService"));
 local Players: Players = cloneref(game:GetService("Players"));
+local UIS: UserInputService = cloneref(game:GetService("UserInputService"));
 
 local plr = Players.LocalPlayer;
+local isMobile = UIS.TouchEnabled and not UIS.KeyboardEnabled and not UIS.MouseEnabled;
 
 local code = function(n: string): string
     if crypt and crypt.base64encode then
@@ -210,7 +212,7 @@ return function(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, mCenter: b
             GS.MenuClosed:Connect(e_close),
 
             fov_adjust and fov_adjust.FocusLost:Connect(function(ep)
-                if ep then
+                if isMobile or ep then
                     local fov = tonumber(fov_adjust.Text);
                     if not fov then fov_adjust.Text = tostring(getgenv().fov); return; end;
 
