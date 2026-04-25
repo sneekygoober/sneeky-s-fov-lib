@@ -32,7 +32,7 @@ if executor:match("Xeno", 1) or executor:match("Solara", 1) then
     return function() return; end;
 end;
 
-return function(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, mCenter: boolean?)
+return function(sFOV: number, tFunc: (origin: Vector3?) -> (Model | BasePart)?, mCenter: boolean?)
     SG["info"]("Loading UI...");
 
     if getgenv()[key] then
