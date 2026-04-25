@@ -46,7 +46,7 @@ return function(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, mCenter: b
         end;
     end;
 
-    local draw = Drawlib.new(sFOV, tFunc, mCenter);
+    local draw = Drawlib.new(getgenv().fov or sFOV, tFunc, mCenter);
     local on = true;
 
     local p = Instance.new("ScreenGui", hui);
@@ -56,7 +56,7 @@ return function(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, mCenter: b
     menu.Name = code(menu:GetDebugId());
     menu.AnchorPoint = Vector2.new(0.5, 0.5);
     menu.Position = UDim2.new(0.5, 0, 0.5, 0);
-    menu.Size = UDim2.new(0.3, 0, 0.3, 0);
+    menu.Size = UDim2.new(0.3, 0, getgenv().fov and 0.5 or 0.3, 0);
     menu.BackgroundColor3 = Color3.fromRGB(25, 25, 25);
     menu.BorderMode = Enum.BorderMode.Outline;
     menu.BorderColor3 = Color3.fromRGB(50, 25, 25);
@@ -87,6 +87,8 @@ return function(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, mCenter: b
 
     local top = Instance.new("Frame", menu)
     top.Name = code(top:GetDebugId());
+    top.AnchorPoint = Vector2.new(0.5, 0);
+    top.Position = UDim2.new(0.5, 0, 0, 0);
     top.Size = UDim2.new(1, 0, 0.5, 0);
     top.BackgroundTransparency = 1;
 
@@ -114,10 +116,42 @@ return function(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, mCenter: b
     internal_close.BackgroundTransparency = 1;
     internal_close.Image = get_id("close");
 
-    local toggle = Instance.new("TextButton", menu);
+    local bottom = Instance.new("Frame", menu)
+    bottom.Name = code(bottom:GetDebugId());
+    bottom.AnchorPoint = Vector2.new(0.5, 1);
+    bottom.Position = UDim2.new(0.5, 0, 1, 0);
+    bottom.Size = UDim2.new(1, 0, 0.5, 0);
+    bottom.BackgroundTransparency = 1;
+
+    local fov_adjust;
+    if getgenv().fov then
+        local fov_txt = Instance.new("TextLabel", bottom);
+        fov_txt.Name = code(fov_txt:GetDebugId());
+        fov_txt.Size = UDim2.new(0.5, 0, 0.5, 0);
+        fov_txt.BackgroundTransparency = 1;
+        fov_txt.TextScaled = true;
+        fov_txt.TextColor3 = Color3.new(1, 1, 1);
+        fov_txt.Text = "FOV Size:";
+
+        fov_adjust = Instance.new("TextBox", bottom);
+        fov_adjust.Name = code(fov_adjust:GetDebugId());
+        fov_adjust.AnchorPoint = Vector2.new(1, 0);
+        fov_adjust.Position = UDim2.new(1, 0, 0, 0);
+        fov_adjust.Size = UDim2.new(0.5, 0, 0.5, 0);
+        fov_adjust.BackgroundTransparency = 1;
+        fov_adjust.TextScaled = true;
+        fov_adjust.TextColor3 = Color3.new(1, 1, 1);
+        fov_adjust.Text = tostring(getgenv().fov);
+    end;
+
+    local toggle = Instance.new("TextButton", bottom);
     toggle.Name = code(toggle:GetDebugId());
-    toggle.Position = UDim2.new(0, 0, 0.5, 0);
-    toggle.Size = UDim2.new(1, 0, 0.5, 0);
+    do
+        local tmp = fov_adjust and 1 or 0.5;
+        toggle.AnchorPoint = Vector2.new(0.5, tmp);
+        toggle.Position = UDim2.new(0.5, 0, tmp, 0);
+    end;
+    toggle.Size = UDim2.new(1, 0, fov_adjust and 0.5 or 1, 0);
     toggle.BackgroundColor3 = on and Color3.new(0, 1, 0) or Color3.new(1, 0, 0);
     toggle.TextScaled = true;
     toggle.Text = on and "FOV Enabled" or "FOV Disabled";
@@ -174,6 +208,16 @@ return function(sFOV: number, tFunc: (origin: Vector3?) -> BasePart?, mCenter: b
         ["connections"] = {
             GS.MenuOpened:Connect(e_close),
             GS.MenuClosed:Connect(e_close),
+
+            fov_adjust and fov_adjust.FocusLost:Connect(function(ep)
+                if ep then
+                    local fov = tonumber(fov_adjust.Text);
+                    if not fov then fov_adjust.Text = tostring(getgenv().fov); return; end;
+
+                    getgenv().fov = fov;
+                    draw:set(fov);
+                end;
+            end) or nil,
 
             external_close.MouseButton1Up:Connect(i_close),
             toggle.MouseButton1Up:Connect(_toggle),
