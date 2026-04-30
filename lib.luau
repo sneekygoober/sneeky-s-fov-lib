@@ -26,7 +26,24 @@ function DrawLib.new(sFOV: number, tFunc: (origin: Vector3?) -> (Model | BasePar
     self.center = mCenter and (UIS.TouchEnabled and not UIS.KeyboardEnabled and not UIS.MouseEnabled);
     --self.p = nil;
 
-    if not (Drawing and cleardrawcache) then
+    if DrawingImmediate then
+        self.signal = DrawingImmediate.GetPaint(1);
+    elseif Drawing and cleardrawcache then
+        self.fov = Drawing.new("Circle");
+        self.fov.Color = Color3.new(1, 0, 0);
+        self.fov.Radius = self.size;
+        self.fov.Thickness = 1;
+        self.fov.Transparency = 1;
+        self.fov.Filled = false;
+        self.fov.NumSides = 256;
+        self.fov.Visible = self.on;
+
+        self.line = Drawing.new("Line");
+        self.line.Thickness = 2;
+        self.line.Color = Color3.new(1, 0, 0);
+        self.line.Transparency = 0.5;
+        self.line.Visible = self.on;
+    else
         self.p = Instance.new("ScreenGui", hui);
         self.p.Name = code(self.p:GetDebugId());
 
@@ -67,23 +84,6 @@ function DrawLib.new(sFOV: number, tFunc: (origin: Vector3?) -> (Model | BasePar
             _.LineJoinMode = Enum.LineJoinMode.Round;
             _.Transparency = 0.5;
         end;
-    elseif DrawingImmediate then
-        self.signal = DrawingImmediate.GetPaint(1);
-    else
-        self.fov = Drawing.new("Circle");
-        self.fov.Color = Color3.new(1, 0, 0);
-        self.fov.Radius = self.size;
-        self.fov.Thickness = 1;
-        self.fov.Transparency = 1;
-        self.fov.Filled = false;
-        self.fov.NumSides = 256;
-        self.fov.Visible = self.on;
-
-        self.line = Drawing.new("Line");
-        self.line.Thickness = 2;
-        self.line.Color = Color3.new(1, 0, 0);
-        self.line.Transparency = 0.5;
-        self.line.Visible = self.on;
     end;
 
     local cSet = function(isGreen: boolean)
