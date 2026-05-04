@@ -130,9 +130,9 @@ return function(sFOV: number, tFunc: (origin: Vector3?) -> (Model | BasePart)?, 
         local fov_txt = Instance.new("TextLabel", bottom);
         fov_txt.Name = code(fov_txt:GetDebugId());
         fov_txt.Size = UDim2.new(0.5, 0, 0.5, 0);
-        fov.BorderMode = Enum.BorderMode.Outline;
-        fov.BorderColor3 = Color3.new(1, 1, 1);
-        fov.BorderSizePixel = 3;
+        fov_txt.BorderMode = Enum.BorderMode.Outline;
+        fov_txt.BorderColor3 = Color3.new(1, 1, 1);
+        fov_txt.BorderSizePixel = 3;
         fov_txt.BackgroundTransparency = 1;
         fov_txt.TextScaled = true;
         fov_txt.TextColor3 = Color3.new(1, 1, 1);
